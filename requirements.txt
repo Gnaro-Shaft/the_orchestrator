@@ -1,0 +1,16 @@
+uvicorn
+fastapi
+langgraph
+pydantic-settings
+sqlalchemy
+alembic
+ruff
+mypy
+pytest
+TypeScript
+Vite
+pnpm
+Tailwind
+shadcn
+TanStack
+Zustand

@@ -1,0 +1,107 @@
+1. Le cœur (Core)
+
+Le cœur ne devra connaître que des abstractions.
+
+Par exemple :
+
+Core
+├── Agent
+├── Tool
+├── Provider
+├── Workflow
+├── Memory
+└── Plugin
+
+Aucune dépendance directe vers Ollama, OpenAI, Qdrant ou GitHub.
+
+2. Les Providers
+
+Tous les LLM devront implémenter la même interface.
+
+BaseLLM
+│
+├── OllamaProvider
+├── OpenAIProvider
+├── AnthropicProvider
+└── vLLMProvider
+
+Changer de modèle ne devra jamais nécessiter de modifier le reste du projet.
+
+3. Les Agents
+
+Même principe.
+
+BaseAgent
+│
+├── ChatAgent
+├── RAGAgent
+├── ResearchAgent
+├── TradingAgent
+└── MnemoAgent
+4. Les Tools
+
+Les outils seront indépendants.
+
+BaseTool
+│
+├── Filesystem
+├── GitHub
+├── Shell
+├── Python
+├── HTTP
+└── Obsidian
+5. Les Plugins
+
+Un plugin devra pouvoir être installé sans modifier le cœur.
+
+Par exemple :
+
+plugins/
+    github/
+    obsidian/
+    trading/
+    mnemo/
+
+Chaque plugin exposera un manifeste (plugin.yaml) et son code.
+
+6. La mémoire
+
+La mémoire ne dépendra pas du LLM.
+
+BaseMemory
+│
+├── ConversationMemory
+├── SummaryMemory
+└── VectorMemory
+7. Le RAG
+
+Même logique.
+
+BaseRetriever
+│
+├── QdrantRetriever
+├── ChromaRetriever
+└── FAISSRetriever
+Le principe fondamental
+
+Je veux que le graphe des dépendances ressemble à ceci :
+
+                 Plugins
+                    │
+                    ▼
+                Agent Layer
+                    │
+                    ▼
+               Workflow Engine
+                    │
+                    ▼
+                   Core
+        ┌───────────┼───────────┐
+        ▼           ▼           ▼
+   Providers    Memory      Retriever
+
+Le Core ne dépend de rien.
+
+Tout dépend du Core.
+
+C'est ce qu'on appelle une architecture orientée interfaces (proche de la Clean Architecture ou de l'Hexagonal Architecture).
