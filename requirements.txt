@@ -1,16 +1,18 @@
+# Tools used by The Orchestrator
+
+## Backend (Python 3.13)
 uvicorn
 fastapi
 langgraph
 pydantic-settings
 sqlalchemy
 alembic
+httpx
+pytest
 ruff
 mypy
-pytest
-TypeScript
-Vite
-pnpm
-Tailwind
-shadcn
-TanStack
-Zustand
+
+## Frontend (React 18)
+react
+react-dom
+react-scripts

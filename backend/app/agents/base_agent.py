@@ -3,13 +3,14 @@ Base agent class for The Orchestrator.
 This defines the common structure and methods for all agents in the system.
 """
 
-from typing import Dict, Any, List
+from typing import Any
+
 from pydantic import BaseModel
 
 
 class AgentState(BaseModel):
     """Common state structure for agents"""
-    messages: List[Dict[str, Any]]
+    messages: list[dict[str, Any]]
     # Add any other common fields here
 
 
@@ -24,7 +25,7 @@ class BaseAgent:
         """Get the configured agent for execution."""
         raise NotImplementedError("Subclasses must implement get_agent")
     
-    def run(self, inputs: Dict[str, Any]):
+    def run(self, inputs: dict[str, Any]):
         """Run the agent with given inputs."""
         agent = self.get_agent()
         return agent.invoke(inputs)

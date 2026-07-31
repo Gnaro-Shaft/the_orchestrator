@@ -3,9 +3,9 @@ Communication system for The Orchestrator agents.
 This enables agents to exchange information and coordinate their actions.
 """
 
-from typing import Dict, Any, List
+from typing import Any
+
 from pydantic import BaseModel
-import json
 
 
 class AgentMessage(BaseModel):
@@ -14,7 +14,7 @@ class AgentMessage(BaseModel):
     recipient: str
     content: str
     message_type: str  # 'request', 'response', 'notification'
-    metadata: Dict[str, Any] = {}
+    metadata: dict[str, Any] = {}
     timestamp: str = ""
 
 
@@ -22,11 +22,17 @@ class CommunicationManager:
     """Manages communication between agents in the orchestrator system"""
     
     def __init__(self):
-        self.message_queue: List[AgentMessage] = []
-        self.agent_memory: Dict[str, Dict[str, Any]] = {}
+        self.message_queue: list[AgentMessage] = []
+        self.agent_memory: dict[str, dict[str, Any]] = {}
         
-    def send_message(self, sender: str, recipient: str, content: str, 
-                    message_type: str = "request", metadata: Dict[str, Any] = None) -> AgentMessage:
+    def send_message(
+        self,
+        sender: str,
+        recipient: str,
+        content: str,
+        message_type: str = "request",
+        metadata: dict[str, Any] | None = None,
+    ) -> AgentMessage:
         """Send a message from one agent to another"""
         if metadata is None:
             metadata = {}
@@ -43,7 +49,7 @@ class CommunicationManager:
         print(f"✓ Message sent: {sender} -> {recipient}")
         return message
     
-    def receive_message(self, recipient: str) -> List[AgentMessage]:
+    def receive_message(self, recipient: str) -> list[AgentMessage]:
         """Receive messages intended for a specific agent"""
         received_messages = [
             msg for msg in self.message_queue 
@@ -73,7 +79,7 @@ class CommunicationManager:
         return None
     
     def broadcast_message(self, sender: str, content: str, 
-                         message_type: str = "notification") -> List[AgentMessage]:
+                         message_type: str = "notification") -> list[AgentMessage]:
         """Send a message to all agents"""
         # In a real implementation, this would get all registered agents
         # For now we simulate it with a list of common agents
@@ -87,7 +93,7 @@ class CommunicationManager:
                 
         return messages
     
-    def get_agent_status(self) -> Dict[str, Any]:
+    def get_agent_status(self) -> dict[str, Any]:
         """Get current system status"""
         return {
             "message_queue_size": len(self.message_queue),
@@ -100,15 +106,20 @@ class CommunicationManager:
 communication_manager = CommunicationManager()
 
 
-def send_agent_message(sender: str, recipient: str, content: str, 
-                      message_type: str = "request", metadata: Dict[str, Any] = None) -> AgentMessage:
+def send_agent_message(
+    sender: str,
+    recipient: str,
+    content: str,
+    message_type: str = "request",
+    metadata: dict[str, Any] | None = None,
+) -> AgentMessage:
     """Convenience function to send a message"""
     if metadata is None:
         metadata = {}
     return communication_manager.send_message(sender, recipient, content, message_type, metadata)
 
 
-def receive_agent_messages(recipient: str) -> List[AgentMessage]:
+def receive_agent_messages(recipient: str) -> list[AgentMessage]:
     """Convenience function to receive messages for an agent"""
     return communication_manager.receive_message(recipient)
 
@@ -124,6 +135,6 @@ def retrieve_agent_memory(agent_name: str, key: str) -> Any:
 
 
 def broadcast_system_message(sender: str, content: str, 
-                           message_type: str = "notification") -> List[AgentMessage]:
+                           message_type: str = "notification") -> list[AgentMessage]:
     """Broadcast a message to all agents"""
     return communication_manager.broadcast_message(sender, content, message_type)
